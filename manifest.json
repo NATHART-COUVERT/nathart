@@ -1,0 +1,21 @@
+{
+  "name": "Nathart",
+  "short_name": "Nathart",
+  "description": "Mon espace projet Nathart",
+  "start_url": "/nathart/",
+  "display": "standalone",
+  "background_color": "#faf9f7",
+  "theme_color": "#6d5fa6",
+  "icons": [
+    {
+      "src": "Logo_Nathart.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "Logo_Nathart.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
