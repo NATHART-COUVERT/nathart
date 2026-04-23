@@ -99,6 +99,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <button class="nav-btn" data-page="creation" onclick="showPage(this)">
       <span class="nav-dot" style="background:var(--pink)"></span> Création & symboles
     </button>
+    <button class="nav-btn" data-page="projet" onclick="showPage(this)">
+      <span class="nav-dot" style="background:var(--purple)"></span> Mon projet
+    </button>
     <div class="sidebar-footer">
       La Peintresse de Damas<br>Art · Neurosciences · Spiritualité
     </div>
@@ -128,6 +131,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <p class="page-sub">Tes apprentissages sur les prompts, les agents et les outils IA.</p>
       <button class="add-btn" onclick="openModal('ia')">+ Ajouter une note</button>
       <div class="notes-list" id="notes-ia"></div>
+    </div>
+    <div class="page" id="page-projet">
+      <p class="page-title">Mon projet</p>
+      <p class="page-sub">La vision, les intentions et les fondations de Nathart.</p>
+      <button class="add-btn" onclick="openModal('projet')">+ Ajouter une note</button>
+      <div class="notes-list" id="notes-projet"></div>
     </div>
     <div class="page" id="page-creation">
       <p class="page-title">Création & symboles</p>
@@ -162,6 +171,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 <script>
 const CATEGORIES = {
   neuro: { label: 'Neurosciences', color: 'purple' },
+  projet: { label: 'Mon projet', color: 'purple' },
   spirit: { label: 'Spiritualité & science', color: 'green' },
   ia: { label: 'Utilisation de l\'IA', color: 'blue' },
   creation: { label: 'Création & symboles', color: 'pink' }
@@ -199,6 +209,15 @@ const defaultNotes = [
     id: 6, cat: 'ia', date: '2026-04-23',
     title: 'Affiner un prompt — le dialogue avec l\'IA',
     content: `L'IA c'est un dialogue, pas un coup unique. La première réponse n'est pas toujours parfaite — on affine, on précise, on redirige.\n\n3 façons d'affiner :\n1. Demander plus de profondeur : "Peux-tu développer la partie sur..."\n2. Changer le ton : "Peux-tu me répondre de façon plus poétique..."\n3. Recentrer : "Ce qui m'importe vraiment c'est..."\n\nAffiner un prompt c'est comme ajuster la mise au point d'un appareil photo — on garde le même sujet mais on le voit de plus en plus clairement.`
+  },
+{
+    id: 8, cat: 'projet', date: '2026-04-23',
+    title: 'La vision officielle de Nathart',
+    content: `"Quand la vibration juste rencontre l'âme prête, la lumière intérieure se réveille — et la guérison devient possible."
+
+Parce que nous avons tous une lumière à faire briller à l'intérieur de nous.
+
+Cette vision est née de la compréhension scientifique que les vibrations musicales et les couleurs activent ensemble des mécanismes neurologiques profonds — et que l'état d'âme de la personne détermine sa capacité à recevoir et transformer cette énergie en guérison.`
   },
   {
     id: 7, cat: 'creation', date: '2026-04-23',
