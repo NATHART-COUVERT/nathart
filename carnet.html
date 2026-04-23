@@ -264,6 +264,7 @@ function renderNotes() {
       </div>
       <p class="note-body">${note.content}</p>
       <div class="note-actions">
+       <button class="note-btn edit" onclick="editNote(${note.id})">Modifier</button>
         <button class="note-btn danger" onclick="deleteNote(${note.id})">Supprimer</button>
       </div>
     </div>`;
