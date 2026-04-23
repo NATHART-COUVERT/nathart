@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carnet de bord — Nathart</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #faf9f7; --bg2: #f2efe9; --bg3: #eae6de;
+  --text: #1a1916; --text2: #6b6760; --text3: #a09d97;
+  --border: rgba(26,25,22,0.1); --border2: rgba(26,25,22,0.18);
+  --purple: #6d5fa6; --purple-light: #ede9f7;
+  --green: #3a7d5c; --green-light: #e6f2ec;
+  --pink: #b5536e; --pink-light: #f5e6eb;
+  --amber: #b07d2a; --amber-light: #f5edda;
+  --blue: #3a6fa6; --blue-light: #e6eef5;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+.app { display: flex; height: 100vh; overflow: hidden; }
+
+.sidebar { width: 220px; min-width: 220px; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; }
+.sidebar-top { padding: 1.5rem 1.25rem 1rem; border-bottom: 1px solid var(--border); }
+.sidebar-brand { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; color: var(--text); }
+.sidebar-tagline { font-size: 11px; color: var(--text3); margin-top: 3px; }
+.nav-section { font-size: 10px; font-weight: 500; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; padding: 1rem 1.25rem 0.4rem; }
+.nav-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 1.25rem; font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--text2); background: none; border: none; cursor: pointer; text-align: left; transition: all 0.15s; border-left: 2px solid transparent; }
+.nav-btn:hover { background: var(--bg3); color: var(--text); }
+.nav-btn.active { color: var(--purple); background: var(--purple-light); border-left-color: var(--purple); font-weight: 500; }
+.nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.sidebar-footer { margin-top: auto; padding: 1rem 1.25rem; border-top: 1px solid var(--border); font-size: 11px; color: var(--text3); line-height: 1.5; }
+
+.main { flex: 1; overflow-y: auto; padding: 2rem 2.5rem; }
+.page { display: none; max-width: 720px; }
+.page.active { display: block; }
+.page-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.page-sub { font-size: 13px; color: var(--text2); margin-bottom: 1.75rem; line-height: 1.6; }
+
+.add-btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; background: var(--purple); color: white; border: none; border-radius: 20px; font-size: 13px; font-family: 'DM Sans', sans-serif; font-weight: 500; cursor: pointer; margin-bottom: 1.5rem; transition: opacity 0.15s; }
+.add-btn:hover { opacity: 0.85; }
+
+.notes-list { display: flex; flex-direction: column; gap: 12px; }
+.note-card { border: 1px solid var(--border); border-radius: 12px; background: white; padding: 1.25rem; }
+.note-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+.note-title { font-size: 15px; font-weight: 500; color: var(--text); }
+.note-date { font-size: 11px; color: var(--text3); white-space: nowrap; margin-left: 12px; }
+.note-body { font-size: 14px; line-height: 1.8; color: var(--text2); white-space: pre-wrap; }
+.note-tag { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; }
+.tag-purple { background: var(--purple-light); color: var(--purple); }
+.tag-green { background: var(--green-light); color: var(--green); }
+.tag-pink { background: var(--pink-light); color: var(--pink); }
+.tag-amber { background: var(--amber-light); color: var(--amber); }
+.tag-blue { background: var(--blue-light); color: var(--blue); }
+.note-actions { display: flex; gap: 8px; margin-top: 10px; }
+.note-btn { font-size: 12px; padding: 4px 12px; border: 1px solid var(--border); border-radius: 20px; background: none; color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; }
+.note-btn:hover { background: var(--bg2); }
+.note-btn.danger:hover { background: #fef2f2; color: #b91c1c; border-color: #fca5a5; }
+
+.empty-state { text-align: center; padding: 3rem 1rem; color: var(--text3); }
+.empty-state p { font-size: 14px; margin-top: 8px; }
+
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 100; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: white; border-radius: 16px; padding: 1.75rem; width: 90%; max-width: 520px; }
+.modal-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; margin-bottom: 1.25rem; }
+.modal label { font-size: 12px; font-weight: 500; color: var(--text2); display: block; margin-bottom: 5px; letter-spacing: 0.04em; text-transform: uppercase; }
+.modal input, .modal select, .modal textarea { width: 100%; padding: 9px 12px; font-size: 14px; font-family: 'DM Sans', sans-serif; border: 1px solid var(--border2); border-radius: 8px; background: var(--bg); color: var(--text); outline: none; margin-bottom: 1rem; }
+.modal input:focus, .modal select:focus, .modal textarea:focus { border-color: var(--purple); }
+.modal textarea { min-height: 120px; resize: vertical; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 0.5rem; }
+.btn-cancel { padding: 9px 18px; background: none; border: 1px solid var(--border2); border-radius: 8px; font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--text2); cursor: pointer; }
+.btn-save { padding: 9px 18px; background: var(--purple); border: none; border-radius: 8px; font-size: 13px; font-family: 'DM Sans', sans-serif; color: white; font-weight: 500; cursor: pointer; }
+
+.back-link { font-size: 13px; color: var(--purple); cursor: pointer; margin-bottom: 1rem; display: inline-block; }
+.back-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="sidebar">
+    <div class="sidebar-top">
+      <p class="sidebar-brand">Carnet de bord</p>
+      <p class="sidebar-tagline">Nathart — mes apprentissages</p>
+    </div>
+    <p class="nav-section">Catégories</p>
+    <button class="nav-btn active" data-page="all" onclick="showPage(this)">
+      <span class="nav-dot" style="background:var(--purple)"></span> Toutes les notes
+    </button>
+    <button class="nav-btn" data-page="neuro" onclick="showPage(this)">
+      <span class="nav-dot" style="background:var(--purple)"></span> Neurosciences
+    </button>
+    <button class="nav-btn" data-page="spirit" onclick="showPage(this)">
+      <span class="nav-dot" style="background:var(--green)"></span> Spiritualité & science
+    </button>
+    <button class="nav-btn" data-page="ia" onclick="showPage(this)">
+      <span class="nav-dot" style="background:var(--blue)"></span> Utilisation de l'IA
+    </button>
+    <button class="nav-btn" data-page="creation" onclick="showPage(this)">
+      <span class="nav-dot" style="background:var(--pink)"></span> Création & symboles
+    </button>
+    <div class="sidebar-footer">
+      La Peintresse de Damas<br>Art · Neurosciences · Spiritualité
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="page active" id="page-all">
+      <p class="page-title">Toutes mes notes</p>
+      <p class="page-sub">Tes apprentissages archivés, classés et accessibles à tout moment.</p>
+      <button class="add-btn" onclick="openModal()">+ Ajouter une note</button>
+      <div class="notes-list" id="notes-all"></div>
+    </div>
+    <div class="page" id="page-neuro">
+      <p class="page-title">Neurosciences</p>
+      <p class="page-sub">Ce que la science dit sur le cerveau, les émotions et la conscience.</p>
+      <button class="add-btn" onclick="openModal('neuro')">+ Ajouter une note</button>
+      <div class="notes-list" id="notes-neuro"></div>
+    </div>
+    <div class="page" id="page-spirit">
+      <p class="page-title">Spiritualité & science</p>
+      <p class="page-sub">Les ponts entre la recherche scientifique et l'expérience spirituelle.</p>
+      <button class="add-btn" onclick="openModal('spirit')">+ Ajouter une note</button>
+      <div class="notes-list" id="notes-spirit"></div>
+    </div>
+    <div class="page" id="page-ia">
+      <p class="page-title">Utilisation de l'IA</p>
+      <p class="page-sub">Tes apprentissages sur les prompts, les agents et les outils IA.</p>
+      <button class="add-btn" onclick="openModal('ia')">+ Ajouter une note</button>
+      <div class="notes-list" id="notes-ia"></div>
+    </div>
+    <div class="page" id="page-creation">
+      <p class="page-title">Création & symboles</p>
+      <p class="page-sub">Le langage de tes œuvres — couleurs, musique, symboles, textes.</p>
+      <button class="add-btn" onclick="openModal('creation')">+ Ajouter une note</button>
+      <div class="notes-list" id="notes-creation"></div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <p class="modal-title">Nouvelle note</p>
+    <label>Titre</label>
+    <input type="text" id="note-title" placeholder="Ex : La synesthésie expliquée">
+    <label>Catégorie</label>
+    <select id="note-cat">
+      <option value="neuro">Neurosciences</option>
+      <option value="spirit">Spiritualité & science</option>
+      <option value="ia">Utilisation de l'IA</option>
+      <option value="creation">Création & symboles</option>
+    </select>
+    <label>Contenu</label>
+    <textarea id="note-content" placeholder="Écris ici ce que tu as appris, retenu, compris..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+      <button class="btn-save" onclick="saveNote()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CATEGORIES = {
+  neuro: { label: 'Neurosciences', color: 'purple' },
+  spirit: { label: 'Spiritualité & science', color: 'green' },
+  ia: { label: 'Utilisation de l\'IA', color: 'blue' },
+  creation: { label: 'Création & symboles', color: 'pink' }
+};
+
+let notes = JSON.parse(localStorage.getItem('nathart_notes') || '[]');
+
+const defaultNotes = [
+  {
+    id: 1, cat: 'neuro', date: '2026-04-23',
+    title: 'Les neurones miroirs — transmission émotionnelle',
+    content: `Les neurones miroirs s'activent aussi bien quand on fait une action que quand on l'observe. Quand quelqu'un contemple une œuvre chargée d'émotion vraie, ces neurones s'activent comme si cette personne vivait elle-même l'expérience. L'artiste ne transmet pas une image — elle transmet un état intérieur.\n\nPlus la cohérence entre ce que l'artiste a vécu et ce qu'il a créé est profonde, plus la transmission est puissante.`
+  },
+  {
+    id: 2, cat: 'neuro', date: '2026-04-23',
+    title: 'La neuroplasticité — le cerveau se remodèle',
+    content: `Le cerveau est capable de se remodeler tout au long de la vie — c'est la neuroplasticité. Être en contact avec une œuvre chargée d'émotion vraie modifie physiquement le cerveau de celui qui la reçoit. Ce n'est pas métaphorique, c'est mesurable.\n\nDes études IRM ont démontré des différences mesurables dans l'activité des ondes cérébrales avant et après la contemplation artistique.`
+  },
+  {
+    id: 3, cat: 'neuro', date: '2026-04-23',
+    title: 'Synesthésie — quand les sons deviennent couleurs',
+    content: `La synesthésie est un phénomène où les sens se mélangent dans le cerveau. Chez un synesthète, quand l'une des zones cérébrales s'active (ex : auditive), une autre s'ouvre automatiquement (ex : visuelle).\n\nLes sons aigus évoquent des couleurs claires car ils vibrent à haute fréquence — comme la lumière claire. Le cerveau reconnaît cette similarité vibratoire.\n\n80% des personnes non synesthètes font spontanément les mêmes associations. C'est universel et inscrit dans le cerveau humain.`
+  },
+  {
+    id: 4, cat: 'neuro', date: '2026-04-23',
+    title: 'Vibrations musicales et guérison — la vision de Nathart',
+    content: `"Lorsque les vibrations musicales renvoient les couleurs au cerveau, en fonction de l'interprétation de celui-ci et de l'état d'âme de la personne, cela peut réveiller un mode de guérison."\n\nLa science confirme : les bonnes vibrations sonores et visuelles peuvent déclencher une baisse du cortisol, une augmentation de la dopamine et sérotonine, un ralentissement du rythme cardiaque, et l'activation du système nerveux parasympathique — celui qui permet au corps de se réparer lui-même.\n\nNathart ne prétend pas guérir — elle crée les conditions neurologiques optimales pour que le corps active ses propres mécanismes de guérison.`
+  },
+  {
+    id: 5, cat: 'ia', date: '2026-04-23',
+    title: 'Les 4 ingrédients d\'un bon prompt',
+    content: `Un prompt puissant contient toujours 4 ingrédients :\n\n1. RÔLE — Qui doit être l'IA ? Ex : "Tu es un expert en neuroscience"\n2. CONTEXTE — De quoi s'agit-il ? Ex : "Je suis artiste peintre, je crée des œuvres énergétiques"\n3. TÂCHE — Qu'est-ce que je veux exactement ? Ex : "Explique-moi l'effet des couleurs sur le cerveau"\n4. FORMAT — Comment je veux la réponse ? Ex : "Réponds simplement, comme à quelqu'un de curieux mais non scientifique"\n\nPlus on est précise dans son prompt, plus la réponse est utile et personnalisée.`
+  },
+  {
+    id: 6, cat: 'ia', date: '2026-04-23',
+    title: 'Affiner un prompt — le dialogue avec l\'IA',
+    content: `L'IA c'est un dialogue, pas un coup unique. La première réponse n'est pas toujours parfaite — on affine, on précise, on redirige.\n\n3 façons d'affiner :\n1. Demander plus de profondeur : "Peux-tu développer la partie sur..."\n2. Changer le ton : "Peux-tu me répondre de façon plus poétique..."\n3. Recentrer : "Ce qui m'importe vraiment c'est..."\n\nAffiner un prompt c'est comme ajuster la mise au point d'un appareil photo — on garde le même sujet mais on le voit de plus en plus clairement.`
+  },
+  {
+    id: 7, cat: 'creation', date: '2026-04-23',
+    title: 'Couleurs et fréquences vibratoires',
+    content: `Les couleurs et les sons sont tous deux des vibrations. Les sons aigus et les couleurs claires partagent des hautes fréquences — le cerveau les reconnaît comme "cousins vibratoires".\n\nAssociations naturelles observées scientifiquement :\n- Sons aigus → couleurs claires (blanc, jaune, bleu ciel)\n- Sons graves → couleurs sombres (bordeaux, violet, noir)\n- Rythme rapide → couleurs chaudes (rouge, orange)\n- Mélodie lente → couleurs froides (bleu, vert)\n\nChoisir une musique en cohérence avec la couleur dominante d'une œuvre active une expérience totale qui touche corps et esprit simultanément.`
+  }
+];
+
+if (notes.length === 0) {
+  notes = defaultNotes;
+  localStorage.setItem('nathart_notes', JSON.stringify(notes));
+}
+
+let currentPage = 'all';
+
+function showPage(btn) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentPage = btn.dataset.page;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + currentPage).classList.add('active');
+  renderNotes();
+}
+
+function renderNotes() {
+  const filtered = currentPage === 'all' ? notes : notes.filter(n => n.cat === currentPage);
+  const containerId = currentPage === 'all' ? 'notes-all' : 'notes-' + currentPage;
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-state"><p>Aucune note pour l\'instant.</p><p>Clique sur "+ Ajouter une note" pour commencer.</p></div>';
+    return;
+  }
+
+  container.innerHTML = filtered.slice().reverse().map(note => {
+    const cat = CATEGORIES[note.cat];
+    return `<div class="note-card" id="note-${note.id}">
+      <span class="note-tag tag-${cat.color}">${cat.label}</span>
+      <div class="note-header">
+        <p class="note-title">${note.title}</p>
+        <p class="note-date">${formatDate(note.date)}</p>
+      </div>
+      <p class="note-body">${note.content}</p>
+      <div class="note-actions">
+        <button class="note-btn danger" onclick="deleteNote(${note.id})">Supprimer</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function formatDate(d) {
+  const date = new Date(d);
+  return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function openModal(cat) {
+  document.getElementById('modal-overlay').classList.add('open');
+  if (cat) document.getElementById('note-cat').value = cat;
+  document.getElementById('note-title').focus();
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.getElementById('note-title').value = '';
+  document.getElementById('note-content').value = '';
+}
+
+function saveNote() {
+  const title = document.getElementById('note-title').value.trim();
+  const content = document.getElementById('note-content').value.trim();
+  const cat = document.getElementById('note-cat').value;
+  if (!title || !content) return;
+
+  const note = {
+    id: Date.now(),
+    cat, title, content,
+    date: new Date().toISOString().split('T')[0]
+  };
+  notes.push(note);
+  localStorage.setItem('nathart_notes', JSON.stringify(notes));
+  closeModal();
+  renderNotes();
+}
+
+function deleteNote(id) {
+  if (!confirm('Supprimer cette note ?')) return;
+  notes = notes.filter(n => n.id !== id);
+  localStorage.setItem('nathart_notes', JSON.stringify(notes));
+  renderNotes();
+}
+
+renderNotes();
+</script>
+</body>
+</html>
