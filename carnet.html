@@ -164,7 +164,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <textarea id="note-content" placeholder="Écris ici ce que tu as appris, retenu, compris..."></textarea>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Annuler</button>
-      <button class="btn-save" onclick="saveNote()">Enregistrer</button>
+      <button class="btn-save" id="btn-save" onclick="saveNote()">Enregistrer</button>
     </div>
   </div>
 </div>
@@ -311,7 +311,7 @@ function editNote(id) {
   document.getElementById('note-cat').value = note.cat;
   document.getElementById('note-content').value = note.content;
   openModal();
-  document.querySelector('.btn-save').onclick = function() {
+  document.getElementById('btn-save').onclick = function() {
     note.title = document.getElementById('note-title').value.trim();
     note.cat = document.getElementById('note-cat').value;
     note.content = document.getElementById('note-content').value.trim();
@@ -319,7 +319,7 @@ function editNote(id) {
     localStorage.setItem('nathart_notes', JSON.stringify(notes));
     closeModal();
     renderNotes();
-    document.querySelector('.btn-save').onclick = saveNote;
+    document.getElementById('btn-save').onclick = saveNote;
   };
 }
 function deleteNote(id) {
