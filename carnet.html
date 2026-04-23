@@ -304,7 +304,24 @@ function saveNote() {
   closeModal();
   renderNotes();
 }
-
+function editNote(id) {
+  const note = notes.find(n => n.id === id);
+  if (!note) return;
+  document.getElementById('note-title').value = note.title;
+  document.getElementById('note-cat').value = note.cat;
+  document.getElementById('note-content').value = note.content;
+  openModal();
+  document.querySelector('.btn-save').onclick = function() {
+    note.title = document.getElementById('note-title').value.trim();
+    note.cat = document.getElementById('note-cat').value;
+    note.content = document.getElementById('note-content').value.trim();
+    if (!note.title || !note.content) return;
+    localStorage.setItem('nathart_notes', JSON.stringify(notes));
+    closeModal();
+    renderNotes();
+    document.querySelector('.btn-save').onclick = saveNote;
+  };
+}
 function deleteNote(id) {
   if (!confirm('Supprimer cette note ?')) return;
   notes = notes.filter(n => n.id !== id);
