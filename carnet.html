@@ -322,6 +322,7 @@ function editNote(id) {
     document.getElementById('btn-save').onclick = saveNote;
   };
 }
+  
 function deleteNote(id) {
   if (!confirm('Supprimer cette note ?')) return;
   notes = notes.filter(n => n.id !== id);
