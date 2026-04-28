@@ -16,6 +16,9 @@
   --pink: #b5536e; --pink-light: #f5e6eb;
   --amber: #b07d2a; --amber-light: #f5edda;
   --blue: #3a6fa6; --blue-light: #e6eef5;
+  --teal: #2a9d8f; --teal-light: #e0f5f3;
+  --rose: #d4788a; --rose-light: #fce8ed;
+  --mint: #3a9e8a; --mint-light: #e2f5f1;
 }
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 .app { display: flex; height: 100vh; overflow: hidden; }
@@ -52,6 +55,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .tag-pink { background: var(--pink-light); color: var(--pink); }
 .tag-amber { background: var(--amber-light); color: var(--amber); }
 .tag-blue { background: var(--blue-light); color: var(--blue); }
+.tag-teal { background: var(--teal-light); color: var(--teal); }
+.tag-rose { background: var(--rose-light); color: var(--rose); }
+.tag-mint { background: var(--mint-light); color: var(--mint); }
 .note-actions { display: flex; gap: 8px; margin-top: 10px; }
 .note-btn { font-size: 12px; padding: 4px 12px; border: 1px solid var(--border); border-radius: 20px; background: none; color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; }
 .note-btn:hover { background: var(--bg2); }
@@ -102,6 +108,15 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <button class="nav-btn" data-page="projet" onclick="showPage(this)">
       <span class="nav-dot" style="background:var(--purple)"></span> Mon projet
     </button>
+    <button class="nav-btn" data-page="quantique" onclick="showPage(this)">
+      <span class="nav-dot" style="background:var(--teal)"></span> L'Éveil Quantique
+    </button>
+    <button class="nav-btn" data-page="ecriture" onclick="showPage(this)">
+      <span class="nav-dot" style="background:var(--rose)"></span> Écriture & Livres
+    </button>
+    <button class="nav-btn" data-page="business" onclick="showPage(this)">
+      <span class="nav-dot" style="background:var(--mint)"></span> Business & vision
+    </button>
     <div class="sidebar-footer">
       La Peintresse de Damas<br>Art · Neurosciences · Spiritualité
     </div>
@@ -144,6 +159,24 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <button class="add-btn" onclick="openModal('creation')">+ Ajouter une note</button>
       <div class="notes-list" id="notes-creation"></div>
     </div>
+    <div class="page" id="page-quantique">
+      <p class="page-title">L'Éveil Quantique</p>
+      <p class="page-sub">Les ponts entre physique quantique, conscience et transformation intérieure.</p>
+      <button class="add-btn" onclick="openModal('quantique')">+ Ajouter une note</button>
+      <div class="notes-list" id="notes-quantique"></div>
+    </div>
+    <div class="page" id="page-ecriture">
+      <p class="page-title">Écriture & Livres</p>
+      <p class="page-sub">Tes lectures, tes inspirations littéraires et ton travail d'autrice.</p>
+      <button class="add-btn" onclick="openModal('ecriture')">+ Ajouter une note</button>
+      <div class="notes-list" id="notes-ecriture"></div>
+    </div>
+    <div class="page" id="page-business">
+      <p class="page-title">Business & vision</p>
+      <p class="page-sub">Stratégie, développement et vision entrepreneuriale de Nathart.</p>
+      <button class="add-btn" onclick="openModal('business')">+ Ajouter une note</button>
+      <div class="notes-list" id="notes-business"></div>
+    </div>
   </main>
 </div>
 
@@ -159,12 +192,15 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <option value="ia">Utilisation de l'IA</option>
       <option value="creation">Création & symboles</option>
       <option value="projet">Mon projet</option>
+      <option value="quantique">L'Éveil Quantique</option>
+      <option value="ecriture">Écriture & Livres</option>
+      <option value="business">Business & vision</option>
     </select>
     <label>Contenu</label>
     <textarea id="note-content" placeholder="Écris ici ce que tu as appris, retenu, compris..."></textarea>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Annuler</button>
-      <button class="btn-save" id="btn-save" onclick="saveNote()">Enregistrer</button>
+      <button class="btn-save" onclick="saveNote()">Enregistrer</button>
     </div>
   </div>
 </div>
@@ -175,7 +211,10 @@ const CATEGORIES = {
   projet: { label: 'Mon projet', color: 'purple' },
   spirit: { label: 'Spiritualité & science', color: 'green' },
   ia: { label: 'Utilisation de l\'IA', color: 'blue' },
-  creation: { label: 'Création & symboles', color: 'pink' }
+  creation: { label: 'Création & symboles', color: 'pink' },
+  quantique: { label: 'L\'Éveil Quantique', color: 'teal' },
+  ecriture: { label: 'Écriture & Livres', color: 'rose' },
+  business: { label: 'Business & vision', color: 'mint' }
 };
 
 let notes = JSON.parse(localStorage.getItem('nathart_notes') || '[]');
@@ -264,7 +303,6 @@ function renderNotes() {
       </div>
       <p class="note-body">${note.content}</p>
       <div class="note-actions">
-       <button class="note-btn edit" onclick="editNote(${note.id})">Modifier</button>
         <button class="note-btn danger" onclick="deleteNote(${note.id})">Supprimer</button>
       </div>
     </div>`;
@@ -304,25 +342,7 @@ function saveNote() {
   closeModal();
   renderNotes();
 }
-function editNote(id) {
-  const note = notes.find(n => n.id === id);
-  if (!note) return;
-  document.getElementById('note-title').value = note.title;
-  document.getElementById('note-cat').value = note.cat;
-  document.getElementById('note-content').value = note.content;
-  openModal();
-  document.getElementById('btn-save').onclick = function() {
-    note.title = document.getElementById('note-title').value.trim();
-    note.cat = document.getElementById('note-cat').value;
-    note.content = document.getElementById('note-content').value.trim();
-    if (!note.title || !note.content) return;
-    localStorage.setItem('nathart_notes', JSON.stringify(notes));
-    closeModal();
-    renderNotes();
-    document.getElementById('btn-save').onclick = saveNote;
-  };
-}
-  
+
 function deleteNote(id) {
   if (!confirm('Supprimer cette note ?')) return;
   notes = notes.filter(n => n.id !== id);
