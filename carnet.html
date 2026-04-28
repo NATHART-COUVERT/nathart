@@ -294,14 +294,14 @@ function renderNotes() {
   }
 
   container.innerHTML = filtered.slice().reverse().map(note => {
-    const cat = CATEGORIES[note.cat];
+    const cat = CATEGORIES[note.cat] || { label: note.cat, color: 'purple' };
     return `<div class="note-card" id="note-${note.id}">
       <span class="note-tag tag-${cat.color}">${cat.label}</span>
       <div class="note-header">
         <p class="note-title">${note.title}</p>
         <p class="note-date">${formatDate(note.date)}</p>
       </div>
-      <p class="note-body">${note.content}</p>
+      <p class="note-body">${note.content.replace(/\n/g, '<br>')}</p>
       <div class="note-actions">
         <button class="note-btn" onclick="editNote(${note.id})">Modifier</button>
         <button class="note-btn danger" onclick="deleteNote(${note.id})">Supprimer</button>
