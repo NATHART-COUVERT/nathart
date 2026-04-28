@@ -182,7 +182,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal">
-    <p class="modal-title">Nouvelle note</p>
+    <p class="modal-title" id="modal-title-label">Nouvelle note</p>
     <label>Titre</label>
     <input type="text" id="note-title" placeholder="Ex : La synesthésie expliquée">
     <label>Catégorie</label>
@@ -303,6 +303,7 @@ function renderNotes() {
       </div>
       <p class="note-body">${note.content}</p>
       <div class="note-actions">
+        <button class="note-btn" onclick="editNote(${note.id})">Modifier</button>
         <button class="note-btn danger" onclick="deleteNote(${note.id})">Supprimer</button>
       </div>
     </div>`;
@@ -314,9 +315,27 @@ function formatDate(d) {
   return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
+let editingNoteId = null;
+
 function openModal(cat) {
+  editingNoteId = null;
   document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('modal-title-label').textContent = 'Nouvelle note';
+  document.getElementById('note-title').value = '';
+  document.getElementById('note-content').value = '';
   if (cat) document.getElementById('note-cat').value = cat;
+  document.getElementById('note-title').focus();
+}
+
+function editNote(id) {
+  const note = notes.find(n => n.id === id);
+  if (!note) return;
+  editingNoteId = id;
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('modal-title-label').textContent = 'Modifier la note';
+  document.getElementById('note-title').value = note.title;
+  document.getElementById('note-content').value = note.content;
+  document.getElementById('note-cat').value = note.cat;
   document.getElementById('note-title').focus();
 }
 
@@ -324,6 +343,7 @@ function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
   document.getElementById('note-title').value = '';
   document.getElementById('note-content').value = '';
+  editingNoteId = null;
 }
 
 function saveNote() {
@@ -332,12 +352,16 @@ function saveNote() {
   const cat = document.getElementById('note-cat').value;
   if (!title || !content) return;
 
-  const note = {
-    id: Date.now(),
-    cat, title, content,
-    date: new Date().toISOString().split('T')[0]
-  };
-  notes.push(note);
+  if (editingNoteId !== null) {
+    notes = notes.map(n => n.id === editingNoteId ? { ...n, title, content, cat } : n);
+  } else {
+    const note = {
+      id: Date.now(),
+      cat, title, content,
+      date: new Date().toISOString().split('T')[0]
+    };
+    notes.push(note);
+  }
   localStorage.setItem('nathart_notes', JSON.stringify(notes));
   closeModal();
   renderNotes();
