@@ -272,30 +272,28 @@ function showPage(btn) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   currentPage = btn.dataset.page;
-  renderNotes();
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + currentPage).classList.add('active');
 }
 window.showPage = showPage;
 
 function renderNotes() {
+  // Toutes les notes
   const allContainer = document.getElementById('notes-all');
   if (allContainer) {
-    const allFiltered = notes;
-    if (allFiltered.length === 0) {
-      allContainer.innerHTML = '<div class="empty-state"><p>Aucune note pour l\'instant.</p></div>';
-    } else {
-      allContainer.innerHTML = allFiltered.slice().reverse().map(note => renderCard(note)).join('');
-    }
+    allContainer.innerHTML = notes.length === 0
+      ? '<div class="empty-state"><p>Aucune note pour l\'instant.</p></div>'
+      : notes.slice().reverse().map(note => renderCard(note)).join('');
   }
 
+  // Par catégorie — chaque conteneur n'affiche QUE ses notes
   Object.keys(CATEGORIES).forEach(catKey => {
-    const container = document.getElementById(`notes-${catKey}`);
+    const container = document.getElementById('notes-' + catKey);
     if (!container) return;
-    const filtered = notes.filter(n => n.cat === catKey);
-    if (filtered.length === 0) {
-      container.innerHTML = '<div class="empty-state"><p>Aucune note dans cette catégorie.</p></div>';
-    } else {
-      container.innerHTML = filtered.slice().reverse().map(note => renderCard(note)).join('');
-    }
+    const filtered = notes.filter(n => String(n.cat) === String(catKey));
+    container.innerHTML = filtered.length === 0
+      ? '<div class="empty-state"><p>Aucune note dans cette catégorie.</p></div>'
+      : filtered.slice().reverse().map(note => renderCard(note)).join('');
   });
 }
 
