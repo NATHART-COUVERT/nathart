@@ -205,117 +205,112 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   </div>
 </div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB4O91Aq-UAT269UAs4A2biqsGVs-xg1Fc",
+  authDomain: "nathart-carnet.firebaseapp.com",
+  projectId: "nathart-carnet",
+  storageBucket: "nathart-carnet.firebasestorage.app",
+  messagingSenderId: "909756106135",
+  appId: "1:909756106135:web:cc9aee870d6e761b2af0d2"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const notesRef = collection(db, "notes");
+
 const CATEGORIES = {
   neuro: { label: 'Neurosciences', color: 'purple' },
   projet: { label: 'Mon projet', color: 'purple' },
   spirit: { label: 'Spiritualité & science', color: 'green' },
-  ia: { label: 'Utilisation de l\'IA', color: 'blue' },
+  ia: { label: "Utilisation de l'IA", color: 'blue' },
   creation: { label: 'Création & symboles', color: 'pink' },
-  quantique: { label: 'L\'Éveil Quantique', color: 'teal' },
+  quantique: { label: "L'Éveil Quantique", color: 'teal' },
   ecriture: { label: 'Écriture & Livres', color: 'rose' },
   business: { label: 'Business & vision', color: 'mint' }
 };
 
-let notes = JSON.parse(localStorage.getItem('nathart_notes') || '[]');
-
 const defaultNotes = [
-  {
-    id: 1, cat: 'neuro', date: '2026-04-23',
-    title: 'Les neurones miroirs — transmission émotionnelle',
-    content: `Les neurones miroirs s'activent aussi bien quand on fait une action que quand on l'observe. Quand quelqu'un contemple une œuvre chargée d'émotion vraie, ces neurones s'activent comme si cette personne vivait elle-même l'expérience. L'artiste ne transmet pas une image — elle transmet un état intérieur.\n\nPlus la cohérence entre ce que l'artiste a vécu et ce qu'il a créé est profonde, plus la transmission est puissante.`
-  },
-  {
-    id: 2, cat: 'neuro', date: '2026-04-23',
-    title: 'La neuroplasticité — le cerveau se remodèle',
-    content: `Le cerveau est capable de se remodeler tout au long de la vie — c'est la neuroplasticité. Être en contact avec une œuvre chargée d'émotion vraie modifie physiquement le cerveau de celui qui la reçoit. Ce n'est pas métaphorique, c'est mesurable.\n\nDes études IRM ont démontré des différences mesurables dans l'activité des ondes cérébrales avant et après la contemplation artistique.`
-  },
-  {
-    id: 3, cat: 'neuro', date: '2026-04-23',
-    title: 'Synesthésie — quand les sons deviennent couleurs',
-    content: `La synesthésie est un phénomène où les sens se mélangent dans le cerveau. Chez un synesthète, quand l'une des zones cérébrales s'active (ex : auditive), une autre s'ouvre automatiquement (ex : visuelle).\n\nLes sons aigus évoquent des couleurs claires car ils vibrent à haute fréquence — comme la lumière claire. Le cerveau reconnaît cette similarité vibratoire.\n\n80% des personnes non synesthètes font spontanément les mêmes associations. C'est universel et inscrit dans le cerveau humain.`
-  },
-  {
-    id: 4, cat: 'neuro', date: '2026-04-23',
-    title: 'Vibrations musicales et guérison — la vision de Nathart',
-    content: `"Lorsque les vibrations musicales renvoient les couleurs au cerveau, en fonction de l'interprétation de celui-ci et de l'état d'âme de la personne, cela peut réveiller un mode de guérison."\n\nLa science confirme : les bonnes vibrations sonores et visuelles peuvent déclencher une baisse du cortisol, une augmentation de la dopamine et sérotonine, un ralentissement du rythme cardiaque, et l'activation du système nerveux parasympathique — celui qui permet au corps de se réparer lui-même.\n\nNathart ne prétend pas guérir — elle crée les conditions neurologiques optimales pour que le corps active ses propres mécanismes de guérison.`
-  },
-  {
-    id: 5, cat: 'ia', date: '2026-04-23',
-    title: 'Les 4 ingrédients d\'un bon prompt',
-    content: `Un prompt puissant contient toujours 4 ingrédients :\n\n1. RÔLE — Qui doit être l'IA ? Ex : "Tu es un expert en neuroscience"\n2. CONTEXTE — De quoi s'agit-il ? Ex : "Je suis artiste peintre, je crée des œuvres énergétiques"\n3. TÂCHE — Qu'est-ce que je veux exactement ? Ex : "Explique-moi l'effet des couleurs sur le cerveau"\n4. FORMAT — Comment je veux la réponse ? Ex : "Réponds simplement, comme à quelqu'un de curieux mais non scientifique"\n\nPlus on est précise dans son prompt, plus la réponse est utile et personnalisée.`
-  },
-  {
-    id: 6, cat: 'ia', date: '2026-04-23',
-    title: 'Affiner un prompt — le dialogue avec l\'IA',
-    content: `L'IA c'est un dialogue, pas un coup unique. La première réponse n'est pas toujours parfaite — on affine, on précise, on redirige.\n\n3 façons d'affiner :\n1. Demander plus de profondeur : "Peux-tu développer la partie sur..."\n2. Changer le ton : "Peux-tu me répondre de façon plus poétique..."\n3. Recentrer : "Ce qui m'importe vraiment c'est..."\n\nAffiner un prompt c'est comme ajuster la mise au point d'un appareil photo — on garde le même sujet mais on le voit de plus en plus clairement.`
-  },
-{
-    id: 8, cat: 'projet', date: '2026-04-23',
-    title: 'La vision officielle de Nathart',
-    content: `"Quand la vibration juste rencontre l'âme prête, la lumière intérieure se réveille — et la guérison devient possible."
-
-Parce que nous avons tous une lumière à faire briller à l'intérieur de nous.
-
-Cette vision est née de la compréhension scientifique que les vibrations musicales et les couleurs activent ensemble des mécanismes neurologiques profonds — et que l'état d'âme de la personne détermine sa capacité à recevoir et transformer cette énergie en guérison.`
-  },
-  {
-    id: 7, cat: 'creation', date: '2026-04-23',
-    title: 'Couleurs et fréquences vibratoires',
-    content: `Les couleurs et les sons sont tous deux des vibrations. Les sons aigus et les couleurs claires partagent des hautes fréquences — le cerveau les reconnaît comme "cousins vibratoires".\n\nAssociations naturelles observées scientifiquement :\n- Sons aigus → couleurs claires (blanc, jaune, bleu ciel)\n- Sons graves → couleurs sombres (bordeaux, violet, noir)\n- Rythme rapide → couleurs chaudes (rouge, orange)\n- Mélodie lente → couleurs froides (bleu, vert)\n\nChoisir une musique en cohérence avec la couleur dominante d'une œuvre active une expérience totale qui touche corps et esprit simultanément.`
-  }
+  { id: '1', cat: 'neuro', date: '2026-04-23', title: 'Les neurones miroirs — transmission émotionnelle', content: "Les neurones miroirs s'activent aussi bien quand on fait une action que quand on l'observe. Quand quelqu'un contemple une œuvre chargée d'émotion vraie, ces neurones s'activent comme si cette personne vivait elle-même l'expérience. L'artiste ne transmet pas une image — elle transmet un état intérieur.\n\nPlus la cohérence entre ce que l'artiste a vécu et ce qu'il a créé est profonde, plus la transmission est puissante." },
+  { id: '2', cat: 'neuro', date: '2026-04-23', title: 'La neuroplasticité — le cerveau se remodèle', content: "Le cerveau est capable de se remodeler tout au long de la vie — c'est la neuroplasticité. Être en contact avec une œuvre chargée d'émotion vraie modifie physiquement le cerveau de celui qui la reçoit. Ce n'est pas métaphorique, c'est mesurable.\n\nDes études IRM ont démontré des différences mesurables dans l'activité des ondes cérébrales avant et après la contemplation artistique." },
+  { id: '3', cat: 'neuro', date: '2026-04-23', title: 'Synesthésie — quand les sons deviennent couleurs', content: "La synesthésie est un phénomène où les sens se mélangent dans le cerveau. Chez un synesthète, quand l'une des zones cérébrales s'active (ex : auditive), une autre s'ouvre automatiquement (ex : visuelle).\n\nLes sons aigus évoquent des couleurs claires car ils vibrent à haute fréquence — comme la lumière claire. Le cerveau reconnaît cette similarité vibratoire.\n\n80% des personnes non synesthètes font spontanément les mêmes associations. C'est universel et inscrit dans le cerveau humain." },
+  { id: '4', cat: 'neuro', date: '2026-04-23', title: 'Vibrations musicales et guérison — la vision de Nathart', content: "\"Lorsque les vibrations musicales renvoient les couleurs au cerveau, en fonction de l'interprétation de celui-ci et de l'état d'âme de la personne, cela peut réveiller un mode de guérison.\"\n\nLa science confirme : les bonnes vibrations sonores et visuelles peuvent déclencher une baisse du cortisol, une augmentation de la dopamine et sérotonine, un ralentissement du rythme cardiaque, et l'activation du système nerveux parasympathique — celui qui permet au corps de se réparer lui-même.\n\nNathart ne prétend pas guérir — elle crée les conditions neurologiques optimales pour que le corps active ses propres mécanismes de guérison." },
+  { id: '5', cat: 'ia', date: '2026-04-23', title: "Les 4 ingrédients d'un bon prompt", content: "Un prompt puissant contient toujours 4 ingrédients :\n\n1. RÔLE — Qui doit être l'IA ? Ex : \"Tu es un expert en neuroscience\"\n2. CONTEXTE — De quoi s'agit-il ? Ex : \"Je suis artiste peintre, je crée des œuvres énergétiques\"\n3. TÂCHE — Qu'est-ce que je veux exactement ? Ex : \"Explique-moi l'effet des couleurs sur le cerveau\"\n4. FORMAT — Comment je veux la réponse ? Ex : \"Réponds simplement, comme à quelqu'un de curieux mais non scientifique\"\n\nPlus on est précise dans son prompt, plus la réponse est utile et personnalisée." },
+  { id: '6', cat: 'ia', date: '2026-04-23', title: "Affiner un prompt — le dialogue avec l'IA", content: "L'IA c'est un dialogue, pas un coup unique. La première réponse n'est pas toujours parfaite — on affine, on précise, on redirige.\n\n3 façons d'affiner :\n1. Demander plus de profondeur : \"Peux-tu développer la partie sur...\"\n2. Changer le ton : \"Peux-tu me répondre de façon plus poétique...\"\n3. Recentrer : \"Ce qui m'importe vraiment c'est...\"\n\nAffiner un prompt c'est comme ajuster la mise au point d'un appareil photo — on garde le même sujet mais on le voit de plus en plus clairement." },
+  { id: '7', cat: 'creation', date: '2026-04-23', title: 'Couleurs et fréquences vibratoires', content: "Les couleurs et les sons sont tous deux des vibrations. Les sons aigus et les couleurs claires partagent des hautes fréquences — le cerveau les reconnaît comme \"cousins vibratoires\".\n\nAssociations naturelles observées scientifiquement :\n- Sons aigus → couleurs claires (blanc, jaune, bleu ciel)\n- Sons graves → couleurs sombres (bordeaux, violet, noir)\n- Rythme rapide → couleurs chaudes (rouge, orange)\n- Mélodie lente → couleurs froides (bleu, vert)\n\nChoisir une musique en cohérence avec la couleur dominante d'une œuvre active une expérience totale qui touche corps et esprit simultanément." },
+  { id: '8', cat: 'projet', date: '2026-04-23', title: 'La vision officielle de Nathart', content: "\"Quand la vibration juste rencontre l'âme prête, la lumière intérieure se réveille — et la guérison devient possible.\"\n\nParce que nous avons tous une lumière à faire briller à l'intérieur de nous.\n\nCette vision est née de la compréhension scientifique que les vibrations musicales et les couleurs activent ensemble des mécanismes neurologiques profonds — et que l'état d'âme de la personne détermine sa capacité à recevoir et transformer cette énergie en guérison." },
+  { id: '9', cat: 'spirit', date: '2026-04-28', title: "Leçon 2 — L'incubation créatrice", content: "Ce que j'ai découvert sur moi comme artiste :\nLa création ne commence pas quand je prends mon pinceau. Elle commence bien avant — dans le silence, la nuit, l'invisible.\nMon cerveau accumule des émotions, des images, des expériences. Sans que je lui demande quoi que ce soit, il travaille. Il tisse. Il connecte.\nC'est ce que les neurosciences appellent le Default Mode Network — le réseau par défaut du cerveau, plus actif quand je ne \"pense pas\" consciemment. C'est là que naissent mes œuvres les plus profondes.\n\nLes 4 phases que je vis sans le savoir :\n🔵 Saturation — Je vis, je ressens, j'accumule des images et des émotions.\n🌙 Incubation — Mon cerveau travaille dans l'ombre, pendant le sommeil, les balades, les moments vides.\n⚡ Illumination — L'idée surgit. Souvent la nuit. Une urgence intérieure.\n🎨 Élaboration — Je cherche, j'assemble, j'ajoute mes symboles personnels.\n\nMon exemple vivant — la toile du Christ :\nLe sujet m'est venu en pleine nuit. À mon réveil, j'avais besoin de chercher des images — sous quelle forme le Christ n'avait pas encore été peint. Puis j'y ai ajouté mes propres symboles :\nMoi dans l'éveil, le Livre de la Vie, la fleur de lotus, l'arbre générationnel, la couronne du Christ, le papillon, la plume, mes enfants, l'ouverture au monde, les étoiles.\n\nCe que la science confirme :\nL'intuition créatrice n'est pas du mystère. C'est de l'intelligence profonde — celle qui parle quand le mental se tait." },
+  { id: '10', cat: 'spirit', date: '2026-04-28', title: 'Leçon 2 — La sélection intuitive', content: "Ce que j'ai découvert sur moi comme artiste :\nJe ne cherche pas mes images. Je les collectionne. Patiemment, sans plan, sans savoir pourquoi. Elles s'accumulent dans mes dossiers — comme des graines qui attendent leur saison.\nEt quand une toile commence à naître en moi… c'est comme un souvenir qui se lève. L'image vient s'imbriquer dans l'idée. Pas par logique. Par reconnaissance.\n\nMon exemple vivant — l'esquisse du chevalier et de la rose :\nIl y a trois ans, j'ai dessiné un écu de chevalier traversé par une rose qui prend racine dans un cœur ouvert.\nDeux ans plus tard, mon compagnon se décrit comme \"un chevalier solitaire qui a rencontré une rose — et elle a pris racine en son armure.\"\n\nCe que ça révèle :\nMon intuition voit avant les yeux. Je construis une bibliothèque émotionnelle vivante qui sait, bien avant moi, ce dont mes œuvres auront besoin." }
 ];
 
-if (notes.length === 0) {
-  notes = defaultNotes;
-  localStorage.setItem('nathart_notes', JSON.stringify(notes));
+let notes = [];
+let currentPage = 'all';
+let editingNoteId = null;
+
+// Initialiser Firebase avec les notes par défaut si vide
+async function initNotes() {
+  const snapshot = await getDocs(notesRef);
+  if (snapshot.empty) {
+    for (const note of defaultNotes) {
+      await setDoc(doc(db, "notes", note.id), note);
+    }
+  }
 }
 
-let currentPage = 'all';
+// Écoute en temps réel
+onSnapshot(notesRef, (snapshot) => {
+  notes = snapshot.docs.map(d => ({ ...d.data(), firestoreId: d.id }));
+  renderNotes();
+});
+
+initNotes();
 
 function showPage(btn) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   currentPage = btn.dataset.page;
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + currentPage).classList.add('active');
   renderNotes();
 }
+window.showPage = showPage;
 
 function renderNotes() {
   const filtered = currentPage === 'all' ? notes : notes.filter(n => n.cat === currentPage);
-  const containerId = currentPage === 'all' ? 'notes-all' : 'notes-' + currentPage;
-  const container = document.getElementById(containerId);
-  if (!container) return;
+  const containers = currentPage === 'all'
+    ? [document.getElementById('notes-all')]
+    : [document.getElementById('notes-all'), document.getElementById(`notes-${currentPage}`)];
+
+  document.querySelectorAll('.notes-list').forEach(c => c.innerHTML = '');
 
   if (filtered.length === 0) {
-    container.innerHTML = '<div class="empty-state"><p>Aucune note pour l\'instant.</p><p>Clique sur "+ Ajouter une note" pour commencer.</p></div>';
+    const container = document.getElementById(`notes-${currentPage}`) || document.getElementById('notes-all');
+    container.innerHTML = `<div class="empty-state"><p>Aucune note dans cette catégorie.</p></div>`;
     return;
   }
 
-  container.innerHTML = filtered.slice().reverse().map(note => {
+  const target = document.getElementById(`notes-${currentPage}`) || document.getElementById('notes-all');
+  target.innerHTML = filtered.slice().reverse().map(note => {
     const cat = CATEGORIES[note.cat] || { label: note.cat, color: 'purple' };
-    return `<div class="note-card" id="note-${note.id}">
+    return `<div class="note-card" id="note-${note.firestoreId}">
       <span class="note-tag tag-${cat.color}">${cat.label}</span>
       <div class="note-header">
         <p class="note-title">${note.title}</p>
-        <p class="note-date">${formatDate(note.date)}</p>
+        <span class="note-date">${note.date || ''}</span>
       </div>
-      <p class="note-body">${note.content.replace(/\n/g, '<br>')}</p>
+      <p class="note-body">${(note.content || '').replace(/\n/g, '<br>')}</p>
       <div class="note-actions">
-        <button class="note-btn" onclick="editNote(${note.id})">Modifier</button>
-        <button class="note-btn danger" onclick="deleteNote(${note.id})">Supprimer</button>
+        <button class="note-btn" onclick="editNote('${note.firestoreId}')">Modifier</button>
+        <button class="note-btn danger" onclick="deleteNote('${note.firestoreId}')">Supprimer</button>
       </div>
     </div>`;
   }).join('');
-}
 
-function formatDate(d) {
-  const date = new Date(d);
-  return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  if (currentPage === 'all') {
+    document.getElementById('notes-all').innerHTML = target.innerHTML;
+  }
 }
-
-let editingNoteId = null;
 
 function openModal(cat) {
   editingNoteId = null;
@@ -326,11 +321,12 @@ function openModal(cat) {
   if (cat) document.getElementById('note-cat').value = cat;
   document.getElementById('note-title').focus();
 }
+window.openModal = openModal;
 
-function editNote(id) {
-  const note = notes.find(n => n.id === id);
+function editNote(firestoreId) {
+  const note = notes.find(n => n.firestoreId === firestoreId);
   if (!note) return;
-  editingNoteId = id;
+  editingNoteId = firestoreId;
   document.getElementById('modal-overlay').classList.add('open');
   document.getElementById('modal-title-label').textContent = 'Modifier la note';
   document.getElementById('note-title').value = note.title;
@@ -338,6 +334,7 @@ function editNote(id) {
   document.getElementById('note-cat').value = note.cat;
   document.getElementById('note-title').focus();
 }
+window.editNote = editNote;
 
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
@@ -345,36 +342,33 @@ function closeModal() {
   document.getElementById('note-content').value = '';
   editingNoteId = null;
 }
+window.closeModal = closeModal;
 
-function saveNote() {
+async function saveNote() {
   const title = document.getElementById('note-title').value.trim();
   const content = document.getElementById('note-content').value.trim();
   const cat = document.getElementById('note-cat').value;
   if (!title || !content) return;
 
-  if (editingNoteId !== null) {
-    notes = notes.map(n => n.id === editingNoteId ? { ...n, title, content, cat } : n);
+  if (editingNoteId) {
+    await updateDoc(doc(db, "notes", editingNoteId), { title, content, cat });
   } else {
-    const note = {
-      id: Date.now(),
+    await addDoc(notesRef, {
       cat, title, content,
       date: new Date().toISOString().split('T')[0]
-    };
-    notes.push(note);
+    });
   }
-  localStorage.setItem('nathart_notes', JSON.stringify(notes));
   closeModal();
-  renderNotes();
 }
+window.saveNote = saveNote;
 
-function deleteNote(id) {
+async function deleteNote(firestoreId) {
   if (!confirm('Supprimer cette note ?')) return;
-  notes = notes.filter(n => n.id !== id);
-  localStorage.setItem('nathart_notes', JSON.stringify(notes));
-  renderNotes();
+  await deleteDoc(doc(db, "notes", firestoreId));
 }
-
-renderNotes();
+window.deleteNote = deleteNote;
 </script>
 </body>
 </html>
+
+
