@@ -277,39 +277,42 @@ function showPage(btn) {
 window.showPage = showPage;
 
 function renderNotes() {
-  const filtered = currentPage === 'all' ? notes : notes.filter(n => n.cat === currentPage);
-  const containers = currentPage === 'all'
-    ? [document.getElementById('notes-all')]
-    : [document.getElementById('notes-all'), document.getElementById(`notes-${currentPage}`)];
-
-  document.querySelectorAll('.notes-list').forEach(c => c.innerHTML = '');
-
-  if (filtered.length === 0) {
-    const container = document.getElementById(`notes-${currentPage}`) || document.getElementById('notes-all');
-    container.innerHTML = `<div class="empty-state"><p>Aucune note dans cette catégorie.</p></div>`;
-    return;
+  const allContainer = document.getElementById('notes-all');
+  if (allContainer) {
+    const allFiltered = notes;
+    if (allFiltered.length === 0) {
+      allContainer.innerHTML = '<div class="empty-state"><p>Aucune note pour l\'instant.</p></div>';
+    } else {
+      allContainer.innerHTML = allFiltered.slice().reverse().map(note => renderCard(note)).join('');
+    }
   }
 
-  const target = document.getElementById(`notes-${currentPage}`) || document.getElementById('notes-all');
-  target.innerHTML = filtered.slice().reverse().map(note => {
-    const cat = CATEGORIES[note.cat] || { label: note.cat, color: 'purple' };
-    return `<div class="note-card" id="note-${note.firestoreId}">
-      <span class="note-tag tag-${cat.color}">${cat.label}</span>
-      <div class="note-header">
-        <p class="note-title">${note.title}</p>
-        <span class="note-date">${note.date || ''}</span>
-      </div>
-      <p class="note-body">${(note.content || '').replace(/\n/g, '<br>')}</p>
-      <div class="note-actions">
-        <button class="note-btn" onclick="editNote('${note.firestoreId}')">Modifier</button>
-        <button class="note-btn danger" onclick="deleteNote('${note.firestoreId}')">Supprimer</button>
-      </div>
-    </div>`;
-  }).join('');
+  Object.keys(CATEGORIES).forEach(catKey => {
+    const container = document.getElementById(`notes-${catKey}`);
+    if (!container) return;
+    const filtered = notes.filter(n => n.cat === catKey);
+    if (filtered.length === 0) {
+      container.innerHTML = '<div class="empty-state"><p>Aucune note dans cette catégorie.</p></div>';
+    } else {
+      container.innerHTML = filtered.slice().reverse().map(note => renderCard(note)).join('');
+    }
+  });
+}
 
-  if (currentPage === 'all') {
-    document.getElementById('notes-all').innerHTML = target.innerHTML;
-  }
+function renderCard(note) {
+  const cat = CATEGORIES[note.cat] || { label: note.cat, color: 'purple' };
+  return `<div class="note-card" id="note-${note.firestoreId}">
+    <span class="note-tag tag-${cat.color}">${cat.label}</span>
+    <div class="note-header">
+      <p class="note-title">${note.title}</p>
+      <span class="note-date">${note.date || ''}</span>
+    </div>
+    <p class="note-body">${(note.content || '').replace(/\n/g, '<br>')}</p>
+    <div class="note-actions">
+      <button class="note-btn" onclick="editNote('${note.firestoreId}')">Modifier</button>
+      <button class="note-btn danger" onclick="deleteNote('${note.firestoreId}')">Supprimer</button>
+    </div>
+  </div>`;
 }
 
 function openModal(cat) {
@@ -370,5 +373,6 @@ window.deleteNote = deleteNote;
 </script>
 </body>
 </html>
+
 
 
