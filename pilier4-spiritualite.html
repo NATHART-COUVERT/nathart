@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spiritualité & Sciences — Nathart</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#c9a96e;--gold-light:#e8cc9a;--gold-dim:#c9a96e44;--bg:#0e0c0a;--bg3:#101a12;--text:#e8e0d0;--text-muted:#9a8e78;--accent:#3ea870;--accent-dim:#3ea87033;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Raleway',sans-serif;font-weight:300;overflow-x:hidden;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.2rem 3rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(14,12,10,0.95),transparent);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;color:var(--gold);text-decoration:none;}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.3s;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 3rem 5rem;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 55% 50% at 70% 35%,rgba(62,168,112,0.09) 0%,transparent 65%),radial-gradient(ellipse 35% 50% at 15% 65%,rgba(201,168,110,0.05) 0%,transparent 55%);}
+.pilier-badge{display:inline-flex;align-items:center;gap:0.5rem;border:0.5px solid var(--accent-dim);padding:0.4rem 1rem;border-radius:2px;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2rem;opacity:0;animation:fadeUp 0.8s 0.1s forwards;}
+.hero-num{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;opacity:0;animation:fadeUp 0.8s 0.2s forwards;}
+.hero-titre{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,7vw,6rem);font-weight:300;line-height:0.95;opacity:0;animation:fadeUp 0.8s 0.4s forwards;}
+.hero-titre em{font-style:italic;color:var(--gold);}
+.hero-sous{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1rem,2vw,1.3rem);color:var(--text-muted);margin-top:1.5rem;max-width:560px;opacity:0;animation:fadeUp 0.8s 0.6s forwards;}
+section{padding:5rem 3rem;max-width:900px;margin:0 auto;}
+.section-label{font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;}
+.section-label::after{content:'';flex:1;max-width:40px;height:0.5px;background:var(--accent);}
+h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(1.8rem,3vw,2.4rem);color:var(--text);line-height:1.2;margin-bottom:1.5rem;}
+h2 em{font-style:italic;color:var(--gold);}
+p{font-size:0.95rem;line-height:1.95;color:#b8ab96;margin-bottom:1.2rem;max-width:680px;}
+p em{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05em;color:var(--text);}
+.citation{border-left:1.5px solid var(--gold);padding:1.5rem 2rem;margin:3rem 0;background:rgba(201,168,110,0.04);}
+.citation p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2vw,1.6rem);color:var(--gold-light);margin:0;line-height:1.6;max-width:100%;}
+.sep{width:100%;max-width:900px;margin:0 auto;height:0.5px;background:linear-gradient(to right,transparent,var(--gold-dim),transparent);}
+.encart{background:rgba(62,168,112,0.05);border:0.5px solid var(--accent-dim);border-radius:4px;padding:2rem 2.5rem;margin:2rem 0;}
+.encart p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--text-muted);line-height:1.9;margin:0;}
+.encart strong{color:var(--gold-light);font-style:normal;font-weight:400;}
+footer{padding:3rem;border-top:0.5px solid var(--gold-dim);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+footer .sig{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:1rem;}
+footer .nav-piliers{display:flex;gap:1.5rem;list-style:none;}
+footer .nav-piliers a{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.3s;}
+footer .nav-piliers a:hover{color:var(--gold);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">Nathart</a>
+  <ul class="nav-links">
+    <li><a href="pilier1-art.html">L'Art</a></li>
+    <li><a href="pilier2-neurosciences.html">Neurosciences</a></li>
+    <li><a href="pilier3-creation.html">Création</a></li>
+    <li><a href="pilier4-spiritualite.html" class="active">Spiritualité</a></li>
+    <li><a href="pilier5-quantique.html">Éveil</a></li>
+  </ul>
+</nav>
+<div class="hero">
+  <div class="hero-bg"></div>
+  <span class="pilier-badge">✨ Pilier 4</span>
+  <div class="hero-num">Nathart — La vision</div>
+  <h1 class="hero-titre">Spiritualité<br>&amp; <em>Sciences</em></h1>
+  <p class="hero-sous">Le pinceau magique ne fonctionne pas sans étincelle.</p>
+</div>
+<div class="sep"></div>
+<section>
+  <div class="section-label reveal">La règle de l'atelier</div>
+  <h2 class="reveal">Quand le cœur ne pétille pas, <em>les pinceaux non plus</em></h2>
+  <p class="reveal">Il existe une drôle de règle dans l'atelier invisible de Nathart : si le cœur ne pétille pas… les pinceaux non plus. On peut peindre avec la tête sérieuse, faire de jolies lignes, choisir les bonnes couleurs.</p>
+  <p class="reveal"><em>Mais quand l'élan intérieur dort encore sous la couverture… la toile, elle aussi, s'endort un peu.</em></p>
+  <p class="reveal">Les émotions sont de sacrées voyageuses. Elles passent d'un cœur à l'autre sans demander la permission. Les neurones miroirs le confirment : notre cerveau détecte l'authenticité avant même que l'esprit conscient comprenne pourquoi.</p>
+</section>
+<div class="sep"></div>
+<section>
+  <div class="section-label reveal">La leçon de Lilo & Stitch</div>
+  <h2 class="reveal">Ce qu'on dépose <em>se transmet</em></h2>
+  <p class="reveal">Deux toiles pour des enfants. La première : un manga, fait avec la tête. La deuxième : Lilo &amp; Stitch, fait avec le cœur qui sautillait partout.</p>
+  <div class="encart reveal">
+    <p>La petite fille devant Stitch : <strong>ses yeux brillaient comme des étoiles qui auraient mangé du soleil.</strong> Une œuvre ne transmet pas seulement ce qu'on voit. Elle transmet surtout ce qu'on y a déposé de vivant.</p>
+  </div>
+  <div class="citation reveal">
+    <p>« Une création sincère devient bien plus qu'une image : elle devient une petite vibration vivante capable d'aller toucher doucement l'âme de quelqu'un d'autre. »</p>
+  </div>
+</section>
+<div class="sep"></div>
+<section>
+  <div class="section-label reveal">L'intuition créatrice</div>
+  <h2 class="reveal">Les œuvres naissent <em>avant le pinceau</em></h2>
+  <p class="reveal">Pendant longtemps, Nathart croyait commencer une toile au moment où elle prenait son pinceau. En réalité… ses œuvres naissent bien avant. Dans le silence. Dans les rêves. Dans les petits moments où elle regarde le ciel sans penser à rien.</p>
+  <p class="reveal">Les scientifiques appellent cela le <em>Default Mode Network</em> — la salle secrète des idées magiques, où les souvenirs, les émotions et les images se mélangent doucement comme une soupe cosmique dans un chaudron invisible.</p>
+</section>
+<footer>
+  <span class="sig">Nathart</span>
+  <ul class="nav-piliers">
+    <li><a href="pilier1-art.html">Art</a></li>
+    <li><a href="pilier2-neurosciences.html">Neurosciences</a></li>
+    <li><a href="pilier3-creation.html">Création</a></li>
+    <li><a href="pilier4-spiritualite.html">Spiritualité</a></li>
+    <li><a href="pilier5-quantique.html">Éveil</a></li>
+  </ul>
+</footer>
+<script>
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
