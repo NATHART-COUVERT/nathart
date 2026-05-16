@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neurosciences — Nathart</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#c9a96e;--gold-light:#e8cc9a;--gold-dim:#c9a96e44;--bg:#0e0c0a;--bg3:#111525;--text:#e8e0d0;--text-muted:#9a8e78;--accent:#5a7be0;--accent-dim:#5a7be033;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Raleway',sans-serif;font-weight:300;overflow-x:hidden;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.2rem 3rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(14,12,10,0.95),transparent);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;color:var(--gold);text-decoration:none;}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.3s;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 3rem 5rem;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 80% 30%,rgba(90,123,224,0.09) 0%,transparent 65%),radial-gradient(ellipse 40% 40% at 15% 60%,rgba(201,168,110,0.05) 0%,transparent 55%);}
+.pilier-badge{display:inline-flex;align-items:center;gap:0.5rem;border:0.5px solid var(--accent-dim);padding:0.4rem 1rem;border-radius:2px;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:2rem;opacity:0;animation:fadeUp 0.8s 0.1s forwards;}
+.hero-num{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;opacity:0;animation:fadeUp 0.8s 0.2s forwards;}
+.hero-titre{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,8vw,7rem);font-weight:300;line-height:0.9;opacity:0;animation:fadeUp 0.8s 0.4s forwards;}
+.hero-titre em{font-style:italic;color:var(--gold);}
+.hero-sous{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1rem,2vw,1.3rem);color:var(--text-muted);margin-top:1.5rem;max-width:560px;opacity:0;animation:fadeUp 0.8s 0.6s forwards;}
+section{padding:5rem 3rem;max-width:900px;margin:0 auto;}
+.section-label{font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;}
+.section-label::after{content:'';flex:1;max-width:40px;height:0.5px;background:var(--accent);}
+h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(1.8rem,3vw,2.4rem);color:var(--text);line-height:1.2;margin-bottom:1.5rem;}
+h2 em{font-style:italic;color:var(--gold);}
+p{font-size:0.95rem;line-height:1.95;color:#b8ab96;margin-bottom:1.2rem;max-width:680px;}
+p em{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05em;color:var(--text);}
+.citation{border-left:1.5px solid var(--gold);padding:1.5rem 2rem;margin:3rem 0;background:rgba(201,168,110,0.04);}
+.citation p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2vw,1.6rem);color:var(--gold-light);margin:0;line-height:1.6;max-width:100%;}
+.sep{width:100%;max-width:900px;margin:0 auto;height:0.5px;background:linear-gradient(to right,transparent,var(--gold-dim),transparent);}
+.grille-syn{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--gold-dim);border:0.5px solid var(--gold-dim);margin:2rem 0;}
+.syn-item{background:var(--bg);padding:1.4rem 1.2rem;display:flex;flex-direction:column;gap:0.4rem;}
+.syn-label{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);}
+.syn-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;color:var(--text-muted);line-height:1.5;}
+footer{padding:3rem;border-top:0.5px solid var(--gold-dim);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+footer .sig{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:1rem;}
+footer .nav-piliers{display:flex;gap:1.5rem;list-style:none;}
+footer .nav-piliers a{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.3s;}
+footer .nav-piliers a:hover{color:var(--gold);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">Nathart</a>
+  <ul class="nav-links">
+    <li><a href="pilier1-art.html">L'Art</a></li>
+    <li><a href="pilier2-neurosciences.html" class="active">Neurosciences</a></li>
+    <li><a href="pilier3-creation.html">Création</a></li>
+    <li><a href="pilier4-spiritualite.html">Spiritualité</a></li>
+    <li><a href="pilier5-quantique.html">Éveil</a></li>
+  </ul>
+</nav>
+<div class="hero">
+  <div class="hero-bg"></div>
+  <span class="pilier-badge">🧠 Pilier 2</span>
+  <div class="hero-num">Nathart — La vision</div>
+  <h1 class="hero-titre">Neuro<em>sciences</em></h1>
+  <p class="hero-sous">Les petits neurones dansent dans notre tête avec leurs pinceaux de lumière…</p>
+</div>
+<div class="sep"></div>
+<section>
+  <div class="section-label reveal">Le conte invisible</div>
+  <h2 class="reveal">Les artistes miniatures <em>qui vivent en nous</em></h2>
+  <p class="reveal">Quand un artiste dépose une émotion dans une œuvre, les neurones du spectateur murmurent : <em>« Ohhhh… je connais cette sensation… »</em> Une couleur ouvre une porte secrète. Une note de musique réveille une image. Un souvenir surgit sans prévenir.</p>
+  <p class="reveal">Le cerveau ne reçoit pas l'art passivement. Il le recrée à l'intérieur.</p>
+</section>
+<div class="sep"></div>
+<section>
+  <div class="section-label reveal">La plasticité neuronale</div>
+  <h2 class="reveal">Un jardin enchanté qui <em>continue de pousser</em></h2>
+  <p class="reveal">Les scientifiques ont découvert quelque chose d'extraordinaire : notre cerveau se transforme tout au long de la vie. Il apprend, se réorganise, s'adapte — comme un jardin qui continue de fleurir même après l'hiver.</p>
+  <div class="citation reveal">
+    <p>« Un arc-en-ciel qui aurait appris à chanter… »</p>
+  </div>
+</section>
+<div class="sep"></div>
+<section>
+  <div class="section-label reveal">Synesthésie & vibrations</div>
+  <h2 class="reveal">Quand tout <em>communique</em></h2>
+  <p class="reveal">Une note de musique peut réveiller une couleur. Une couleur peut faire naître un souvenir. Les sens se parlent dans un langage que le cerveau comprend depuis toujours.</p>
+  <div class="grille-syn reveal">
+    <div class="syn-item"><span class="syn-label">Sons aigus</span><span class="syn-text">blanc, jaune, bleu du ciel</span></div>
+    <div class="syn-item"><span class="syn-label">Sons graves</span><span class="syn-text">bordeaux, violet, noir velours</span></div>
+    <div class="syn-item"><span class="syn-label">Rythmes rapides</span><span class="syn-text">rouge pétillant, orange crépitant</span></div>
+    <div class="syn-item"><span class="syn-label">Mélodies lentes</span><span class="syn-text">bleus tranquilles, verts qui respirent</span></div>
+  </div>
+</section>
+<div class="sep"></div>
+<section>
+  <div class="section-label reveal">Ce que Nathart propose</div>
+  <h2 class="reveal">Un espace intérieur <em>doux et lumineux</em></h2>
+  <p class="reveal">Nathart ne prétend pas guérir. Mais elle crée des univers, des couleurs et des vibrations capables d'ouvrir un espace où le corps, l'âme et le cœur <em>se rappellent qu'ils possèdent déjà en eux de merveilleux pouvoirs de réparation</em>.</p>
+</section>
+<footer>
+  <span class="sig">Nathart</span>
+  <ul class="nav-piliers">
+    <li><a href="pilier1-art.html">Art</a></li>
+    <li><a href="pilier2-neurosciences.html">Neurosciences</a></li>
+    <li><a href="pilier3-creation.html">Création</a></li>
+    <li><a href="pilier4-spiritualite.html">Spiritualité</a></li>
+    <li><a href="pilier5-quantique.html">Éveil</a></li>
+  </ul>
+</footer>
+<script>
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
