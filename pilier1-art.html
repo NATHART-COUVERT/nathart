@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Art — Nathart</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#c9a96e;--gold-light:#e8cc9a;--gold-dim:#c9a96e44;--bg:#0e0c0a;--bg3:#1e1a15;--text:#e8e0d0;--text-muted:#9a8e78;--ocre:#c9844a;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Raleway',sans-serif;font-weight:300;overflow-x:hidden;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.2rem 3rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(14,12,10,0.95),transparent);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;color:var(--gold);text-decoration:none;}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.3s;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 3rem 5rem;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 70% 40%,rgba(201,168,110,0.08) 0%,transparent 70%),radial-gradient(ellipse 40% 60% at 20% 70%,rgba(201,132,74,0.06) 0%,transparent 60%);}
+.pilier-badge{display:inline-flex;align-items:center;gap:0.5rem;border:0.5px solid rgba(201,132,74,0.3);padding:0.4rem 1rem;border-radius:2px;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ocre);margin-bottom:2rem;opacity:0;animation:fadeUp 0.8s 0.1s forwards;}
+.hero-num{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;opacity:0;animation:fadeUp 0.8s 0.2s forwards;}
+.hero-titre{font-family:'Cormorant Garamond',serif;font-size:clamp(4rem,10vw,8rem);font-weight:300;line-height:0.9;opacity:0;animation:fadeUp 0.8s 0.4s forwards;}
+.hero-titre em{font-style:italic;color:var(--gold);}
+.hero-sous{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1rem,2vw,1.3rem);color:var(--text-muted);margin-top:1.5rem;max-width:540px;opacity:0;animation:fadeUp 0.8s 0.6s forwards;}
+section{padding:5rem 3rem;max-width:900px;margin:0 auto;}
+.section-label{font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--ocre);margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;}
+.section-label::after{content:'';flex:1;max-width:40px;height:0.5px;background:var(--ocre);}
+h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(1.8rem,3vw,2.4rem);color:var(--text);line-height:1.2;margin-bottom:1.5rem;}
+h2 em{font-style:italic;color:var(--gold);}
+p{font-size:0.95rem;line-height:1.95;color:#b8ab96;margin-bottom:1.2rem;max-width:680px;}
+p em{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05em;color:var(--text);}
+.citation{border-left:1.5px solid var(--gold);padding:1.5rem 2rem;margin:3rem 0;background:rgba(201,168,110,0.04);}
+.citation p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,2vw,1.6rem);color:var(--gold-light);margin:0;line-height:1.6;max-width:100%;}
+.bloc-cobra{background:var(--bg3);border:0.5px solid var(--gold-dim);border-radius:4px;padding:2rem 2.5rem;margin:2rem 0;}
+.bloc-cobra h3{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--gold);margin-bottom:0.8rem;}
+.sep{width:100%;max-width:900px;margin:0 auto;height:0.5px;background:linear-gradient(to right,transparent,var(--gold-dim),transparent);}
+footer{padding:3rem;border-top:0.5px solid var(--gold-dim);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+footer .sig{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:1rem;}
+footer .nav-piliers{display:flex;gap:1.5rem;list-style:none;}
+footer .nav-piliers a{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.3s;}
+footer .nav-piliers a:hover{color:var(--gold);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">Nathart</a>
+  <ul class="nav-links">
+    <li><a href="pilier1-art.html" class="active">L'Art</a></li>
+    <li><a href="pilier2-neurosciences.html">Neurosciences</a></li>
+    <li><a href="pilier3-creation.html">Création</a></li>
+    <li><a href="pilier4-spiritualite.html">Spiritualité</a></li>
+    <li><a href="pilier5-quantique.html">Éveil</a></li>
+  </ul>
+</nav>
+<div class="hero">
+  <div class="hero-bg"></div>
+  <span class="pilier-badge">🎨 Pilier 1</span>
+  <div class="hero-num">Nathart — La vision</div>
+  <h1 class="hero-titre">L'<em>Art</em></h1>
+  <p class="hero-sous">Pas ce qu'il montre. Ce qu'il fait à celui qui le regarde.</p>
+</div>
+<div class="sep"></div>
+<section>
+  <div class="section-label reveal">La peinture Cobra</div>
+  <h2 class="reveal">Une technique au service <em>de la liberté</em></h2>
+  <p class="reveal">La peinture Cobra est une huile professionnelle — mêmes pigments de haute qualité, même viscosité que les huiles traditionnelles — mais nettoyée à l'eau. Sans solvants, sans térébenthine, sans odeur âpre.</p>
+  <div class="bloc-cobra reveal">
+    <h3>Pourquoi c'est important</h3>
+    <p>Les académies d'art peuvent désormais enseigner la peinture à l'huile sans compromettre la santé de leurs étudiants. Un pont entre la tradition et les générations futures. Un patrimoine culturel préservé.</p>
+  </div>
+</section>
+<div class="sep"></div>
+<section>
+  <div class="section-label reveal">Ce que la peinture fait</div>
+  <h2 class="reveal">Un voyage dans le pays <em>merveilleux de soi-même</em></h2>
+  <p class="reveal">Ce n'est pas ce qu'une toile montre qui compte. C'est ce qu'elle fait. Elle éveille. Un souvenir endormi. Une sensation oubliée. Un état d'âme qu'on croyait perdu.</p>
+  <p class="reveal">Inconsciemment, les neurones cheminent à travers les couleurs, les formes, le coup de pinceau — des chemins directement reliés aux émotions. La personne qui contemple se met à voyager sans bouger.</p>
+  <div class="citation reveal">
+    <p>« L'artiste offre un voyage de découverte dans le pays merveilleux de soi-même… »</p>
+  </div>
+</section>
+<div class="sep"></div>
+<section>
+  <div class="section-label reveal">La clé scientifique</div>
+  <h2 class="reveal">Ce que la neurologie <em>confirme</em></h2>
+  <p class="reveal">Ce ressenti devant une œuvre n'est pas une illusion. Il est réel, mesurable, vivant. Les circuits émotionnels du cerveau s'activent face aux œuvres d'art — c'est de la neurologie, pas de la magie.</p>
+  <p class="reveal"><em>Mais la magie, elle, n'est pas absente pour autant.</em></p>
+</section>
+<footer>
+  <span class="sig">Nathart</span>
+  <ul class="nav-piliers">
+    <li><a href="pilier1-art.html">Art</a></li>
+    <li><a href="pilier2-neurosciences.html">Neurosciences</a></li>
+    <li><a href="pilier3-creation.html">Création</a></li>
+    <li><a href="pilier4-spiritualite.html">Spiritualité</a></li>
+    <li><a href="pilier5-quantique.html">Éveil</a></li>
+  </ul>
+</footer>
+<script>
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
